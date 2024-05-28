@@ -1,0 +1,31 @@
+version: '3.3'
+
+volumes:
+  pg_data:
+  static:
+  media_volume:
+
+services:
+  db:
+    image: postgres:13-alpine
+    restart: always
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+  django_bot:
+    image: m1x3r/django_bot
+    env_file: .env
+    volumes:
+      - static:/backend_static
+      - media_volume:/media_files
+  bot:
+    image: m1x3r/bot
+    env_file: .env
+  gateway:
+    image: m1x3r/django_bot_gateway
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - static:/staticfiles/
+      - media_volume:/media_files
